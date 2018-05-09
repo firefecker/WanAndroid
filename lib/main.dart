@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter_app/second.dart';
 
 void main() => runApp(new MyApp1());
 
@@ -22,11 +23,13 @@ class RandomWordsState extends State<RandomWords> {
 
   @override
   Widget build(BuildContext context) {
-//    final wordPair = new WordPair.random();
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: true,
         title: new Text("Hello World"),
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved)
+        ],
       ),
       body: _buildSuggestions(),
     );
@@ -78,6 +81,30 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
+
+  void _pushSaved() {
+    Navigator.of(context).push(
+      new MaterialPageRoute(builder: (context) {
+        final tiles = _saved.map(
+              (pair) {
+            return new ListTile(
+              title: new Text(
+                pair.asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          },
+        );
+        final divided = ListTile
+            .divideTiles(
+          context: context,
+          tiles: tiles,
+        ).toList();
+
+        return new MyApp2(divided);
+      })
+    );
+  }
 }
 
 class MyApp1 extends StatelessWidget {
@@ -85,6 +112,9 @@ class MyApp1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: "Hello World",
+      theme: new ThemeData(
+        primaryColor: Colors.white
+      ),
       home: new RandomWords(),
     );
   }
