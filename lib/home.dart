@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/main1.dart';
-import 'package:flutter_app/second.dart';
-import 'package:flutter_app/third.dart';
+import 'package:flutter_app/app/model/home.dart';
+import 'package:flutter_app/app/model/second.dart';
+import 'package:flutter_app/app/model/third.dart';
 
 class BossApp extends StatefulWidget {
   @override

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
-import 'package:flutter_app/second.dart';
 
 void main() {
   return runApp(new MaterialApp(

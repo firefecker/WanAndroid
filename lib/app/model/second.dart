@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/third.dart';
+import 'package:flutter_app/app/model/third.dart';
 
 class MyApp2 extends StatelessWidget {
   @override
