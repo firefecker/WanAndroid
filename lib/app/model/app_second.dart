@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/model/third.dart';
+import 'package:flutter_app/app/model/home_detail.dart';
 
 class MyApp2 extends StatelessWidget {
   @override
@@ -49,11 +49,27 @@ class TopLakeState extends State<TopLake> {
   }
 
   void _pushSaved() {
-    Navigator.of(context).push(
-        new MaterialPageRoute(builder: (context) {
-          return new MyApp3();
-        })
-    );
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return new HomeDetail(title: "这是详情页");
+        },
+        transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+          return new FadeTransition(
+            opacity: animation,
+            child: new SlideTransition(position: new Tween<Offset>(
+              begin: const Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).animate(animation), child: child),
+          );
+        }
+    ),);
+//    Navigator.of(context).push(
+//        new MaterialPageRoute(
+//            builder: (BuildContext context) {
+//              return new HomeDetail(title: "这是详情页");
+//            })
+//    );
   }
 
   /**
