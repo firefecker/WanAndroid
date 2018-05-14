@@ -159,15 +159,25 @@ class HomeState extends State<HomeStateless>
               onTap: () {
                 // 点击跳转到详情
                 Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (ctx) => new NewsDetail(id:articles[index].link )
+                    builder: (ctx) => new NewsDetail(id: articles[index].link)
                 ));
               },
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(articles[index].title,
-                      style: new TextStyle(fontWeight: FontWeight.bold)),
-                  new Text(articles[index].author),
+                children: [
+                  new Container(
+                    padding: const EdgeInsets.all(10.0),
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    child: new Text(articles[index].title,
+                      style: new TextStyle(fontWeight: FontWeight.bold),),
+                  ),
+                  new Row(
+                    children: <Widget>[
+                      buildButtonRow(Icons.person, articles[index].author, 10.0,false),
+                      buildButtonRow(Icons.select_all, articles[index].chapterName, 10.0,false),
+                      buildButtonRow(Icons.date_range, articles[index].niceDate, 10.0,true),
+                    ],
+                  ),
                   new Divider()
                 ],
               ),
@@ -182,74 +192,45 @@ class HomeState extends State<HomeStateless>
       },);
   }
 
-}
+  /**
+   * 将文本和icon组合成为控件的方法
+   */
+  Row buildButtonRow(IconData icon, String label, double margin,bool setWidth) {
+    Color color = Theme
+        .of(context)
+        .primaryColor;
+    return new Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        new Container(
+          child: new Icon(icon, color: color, size: 20.0,),
+          margin: EdgeInsets.only(left: margin,bottom: 10.0),
+          alignment: Alignment.centerRight,
+        ),
 
-class RandomWords extends StatefulWidget {
-  @override
-  createState() => new RandomWordsState();
-}
-
-class RandomWordsState extends State<RandomWords> {
-
-//  在Dart语言中使用下划线前缀标识符，会强制其变成私有的
-
-//_suggestions列表以保存建议的单词对
-  final _suggestions = <WordPair>[];
-
-//添加一个biggerFont变量来增大字体大小
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-
-//  这个集合存储用户喜欢（收藏）的单词对。在这里，Set比List更合适，因为Set中不允许重复的值
-  final _saved = new Set<WordPair>();
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildSuggestions();
-  }
-
-  Widget _buildSuggestions() {
-    return new ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      // 对于每个建议的单词对都会调用一次itemBuilder，然后将单词对添加到ListTile行中
-      // 在偶数行，该函数会为单词对添加一个ListTile row.
-      // 在奇数行，该行书湖添加一个分割线widget，来分隔相邻的词对。
-      // 注意，在小屏幕上，分割线看起来可能比较吃力。
-      itemBuilder: (context, i) {
-        // 在每一列之前，添加一个1像素高的分隔线widget
-        if (i.isOdd) return new Divider();
-        // 语法 "i ~/ 2" 表示i除以2，但返回值是整形（向下取整），比如i为：1, 2, 3, 4, 5
-        // 时，结果为0, 1, 1, 2, 2， 这可以计算出ListView中减去分隔线后的实际单词对数量
-        final index = i ~/ 2;
-        // 如果是建议列表中最后一个单词对
-        if (index >= _suggestions.length) {
-          // ...接着再生成10个单词对，然后添加到建议列表
-          _suggestions.addAll(generateWordPairs().take(10));
-        }
-        return _buildRow(_suggestions[index]);
-      },
-    );
-  }
-
-  Widget _buildRow(WordPair suggestion) {
-    final alreadySaved = _saved.contains(suggestion);
-    return new ListTile(
-      title: new Text(
-        suggestion.asPascalCase,
-        style: _biggerFont,
-      ),
-      trailing: new Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(suggestion);
-          } else {
-            _saved.add(suggestion);
-          }
-        });
-      },
+        setWidth ? new Container(
+          alignment: Alignment.centerRight,
+          child: new Text(label,
+            softWrap: true,
+            style: new TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w400,
+              color: Colors.grey[500],
+            ),
+          ),
+          margin: const EdgeInsets.only(left: 3.0,bottom: 10.0),
+        ) : new Container(
+          child: new Text(label,
+            style: new TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w400,
+              color: Colors.grey[500],
+            ),
+          ),
+          margin: const EdgeInsets.only(left: 3.0,bottom: 10.0),
+        ),
+      ],
     );
   }
 }
