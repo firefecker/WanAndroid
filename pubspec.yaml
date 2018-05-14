@@ -9,6 +9,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.0
   english_words: ^3.1.0
+  font_awesome_flutter: "^6.0.0"
+  flutter_webview_plugin: "^0.1.5"
 
 dev_dependencies:
   flutter_test:
@@ -26,7 +28,26 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - images/lake.jpg
+    - assets/images/lake.jpg
+    - assets/images/emma-watson.jpg
+    - assets/images/microphone.png
+    - assets/images/wallet.png
+    - assets/images/joystick.png
+    - assets/images/ic_avatar_default.png
+
+  fonts:
+      - family: Themify
+        fonts:
+          - asset: assets/fonts/themify.ttf
+      - family: LineAwesome
+        fonts:
+          - asset: assets/fonts/line-awesome.ttf
+      - family: Timeburner
+        fonts:
+          - asset: assets/fonts/timeburnernormal.ttf
+          - asset: assets/fonts/timeburnerbold.ttf
+            weight: 700
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

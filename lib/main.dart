@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/app/model/home_detail.dart';
 import 'package:flutter_app/home.dart';
+
 
 void main() {
   return runApp(new MaterialApp(
@@ -13,6 +15,11 @@ void main() {
       accentColor: Colors.blue[300],
     ),
     home: new SplashPage(),
+    routes: <String,WidgetBuilder>{
+      '/a': (BuildContext context) => new HomeDetail(title: 'page A'),
+      '/b': (BuildContext context) => new HomeDetail(title: 'page B'),
+      '/c': (BuildContext context) => new HomeDetail(title: 'page C'),
+    },
   ));
 }
 
