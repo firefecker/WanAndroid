@@ -8,8 +8,12 @@ class DashEntity extends BaseEntity {
 
   static List<Data> fromJson(String json) {
     Map jsonObj = JSON.decode(json);
-    List jsonObj2 = jsonObj["data"];
+    int errorCode = jsonObj["errorCode"];
     List<Data> datas = [];
+    if (errorCode != 0) {
+      return datas;
+    }
+    List jsonObj2 = jsonObj["data"];
     Data data = null;
     for (var i = 0; i < jsonObj2.length; i ++) {
       List jsonObj3 = jsonObj2[i]["children"];

@@ -15,11 +15,6 @@ void main() {
       accentColor: Colors.blue[300],
     ),
     home: new SplashPage(),
-    routes: <String,WidgetBuilder>{
-      '/a': (BuildContext context) => new HomeDetail(title: 'page A'),
-      '/b': (BuildContext context) => new HomeDetail(title: 'page B'),
-      '/c': (BuildContext context) => new HomeDetail(title: 'page C'),
-    },
   ));
 }
 

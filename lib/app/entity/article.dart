@@ -12,8 +12,14 @@ class ArticleEntity extends BaseEntity {
     Map jsonObj = JSON.decode(json);
     ArticleEntity entity = new ArticleEntity();
     Data data = new Data();
+    List<Datas> result = [];
     entity.errorCode = jsonObj["errorCode"];
     entity.errorMsg = jsonObj["errorMsg"];
+    if (entity.errorCode != 0) {
+      data.datas = result;
+      entity.data = data;
+      return entity;
+    }
     Map jsonObj2 = jsonObj["data"];
     data.currentPage = jsonObj2["curPage"];
     data.offset = jsonObj2["offset"];
@@ -23,7 +29,7 @@ class ArticleEntity extends BaseEntity {
     data.total = jsonObj2["total"];
     List jsonObj3 = jsonObj2["datas"];
 
-    List<Datas> result = [];
+
     Datas datas = null;
     for (var i = 0; i < jsonObj3.length; i ++) {
       datas = new  Datas(jsonObj3[i]["apkLink"], jsonObj3[i]["author"], jsonObj3[i]["chapterId"],

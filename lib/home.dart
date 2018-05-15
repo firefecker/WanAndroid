@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/app/model/app_second.dart';
 import 'package:flutter_app/app/model/dash_board.dart';
 import 'package:flutter_app/app/model/home.dart';
+import 'package:flutter_app/app/model/hot.dart';
 
 const String BaseURL = "http://www.wanandroid.com";
 
@@ -12,7 +13,7 @@ class BossApp extends StatefulWidget {
   HomeState createState() => new HomeState(children);
 
   BossApp() {
-    children = <Widget>[new Home(), new DashBoard(), new Home(), new DashBoard()];
+    children = <Widget>[new Home(), new DashBoard(), new Hotkey(), new DashBoard()];
   }
 }
 

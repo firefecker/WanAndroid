@@ -142,7 +142,4 @@ class DashBoardState extends State<DashBoardStateless> {
     }
     return widgets;
   }
-
 }
-
-/* */

@@ -14,10 +14,14 @@ class BannerEntity extends BaseEntity {
     Map jsonObj = JSON.decode(json);
     BannerEntity entity = new BannerEntity();
     BannerData data = null;
+    List<BannerData> result = new List();
     entity.errorCode = jsonObj["errorCode"];
     entity.errorMsg = jsonObj["errorMsg"];
+    if (entity.errorCode != 0) {
+      entity.data = result;
+      return entity;
+    }
     List jsonObj2 = jsonObj["data"];
-    List<BannerData> result = new List();
     for (var i = 0; i < jsonObj2.length; i ++) {
       data = new BannerData(jsonObj2[i]["desc"],jsonObj2[i]["id"],jsonObj2[i]["imagePath"],jsonObj2[i]["isVisible"],
           jsonObj2[i]["order"],jsonObj2[i]["title"],jsonObj2[i]["type"],jsonObj2[i]["url"]);
