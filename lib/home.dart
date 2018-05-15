@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app/model/app_second.dart';
+import 'package:flutter_app/app/model/dash_board.dart';
 import 'package:flutter_app/app/model/home.dart';
 
 const String BaseURL = "http://www.wanandroid.com";
 
 class BossApp extends StatefulWidget {
+
+  List<Widget> children;
   @override
-  HomeState createState() => new HomeState();
+  HomeState createState() => new HomeState(children);
+
+  BossApp() {
+    children = <Widget>[new Home(), new DashBoard(), new Home(), new DashBoard()];
+  }
 }
 
 class HomeState extends State<BossApp> {
@@ -15,10 +22,11 @@ class HomeState extends State<BossApp> {
   List<Widget> children;
   String title = "首页";
 
+  HomeState(this.children);
+
   @override
   void initState() {
     super.initState();
-    children = <Widget>[new Home(), new Home(), new Home(), new Home()];
   }
 
   @override
@@ -65,12 +73,12 @@ class HomeState extends State<BossApp> {
               title: new Text("主页"),
               backgroundColor: Colors.white),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.adjust),
-              title: new Text("整理"),
+              icon: new Icon(Icons.dashboard),
+              title: new Text("体系"),
               backgroundColor: Colors.white),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.map),
-              title: new Text("地图"),
+              icon: new Icon(Icons.hot_tub),
+              title: new Text("热词"),
               backgroundColor: Colors.white),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.face,),
@@ -88,10 +96,10 @@ class HomeState extends State<BossApp> {
         title = "首页";
         break;
       case 1:
-        title = "整理";
+        title = "体系";
         break;
       case 2:
-        title = "地图";
+        title = "热词";
         break;
       case 3:
         title = "我的";

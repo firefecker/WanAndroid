@@ -6,7 +6,7 @@ class NewsDetail extends StatefulWidget {
 
   String id;
 
-  NewsDetail({Key key, this.id}):super(key: key);
+  NewsDetail({Key key, this.id}) :super(key: key);
 
   @override
   State<StatefulWidget> createState() => new NewsDetailState(id: this.id);
@@ -39,7 +39,8 @@ class NewsDetailState extends State<NewsDetail> {
   @override
   Widget build(BuildContext context) {
     List<Widget> titleContent = [];
-    titleContent.add(new Text("文章详情", style: new TextStyle(color: Colors.white),));
+    titleContent.add(
+        new Text("文章详情", style: new TextStyle(color: Colors.white),));
     if (!loaded) {
       titleContent.add(new CupertinoActivityIndicator());
     }
@@ -47,7 +48,10 @@ class NewsDetailState extends State<NewsDetail> {
     return new WebviewScaffold(
       url: this.id,
       appBar: new AppBar(
-        leading: new Icon(Icons.arrow_back, color: Colors.white,),
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back, color: Colors.white),
+            tooltip: "Back Arrow",
+            onPressed: _popSaved),
         title: new Row(
           children: titleContent,
         ),
@@ -57,5 +61,9 @@ class NewsDetailState extends State<NewsDetail> {
       withLocalStorage: true,
       withJavascript: true,
     );
+  }
+
+  void _popSaved() {
+    Navigator.of(context).pop("");
   }
 }

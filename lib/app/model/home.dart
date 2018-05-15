@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/app/component/newsdetail.dart';
 import 'package:flutter_app/app/component/slideview.dart';
@@ -10,11 +8,22 @@ import 'package:flutter_app/app/entity/article.dart';
 import 'package:flutter_app/app/entity/banner.dart';
 import 'package:flutter_app/home.dart';
 
+List<Datas> articles = new List();
+int status = 0;
+List<BannerData> bannerList = new List();
+int pageIndex = 0;
+int total = 0;
 
 class Home extends StatelessWidget {
+  Widget widget;
+
+  Home() {
+    widget = new HomeStateless();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new HomeStateless();
+    return widget;
   }
 }
 
@@ -23,19 +32,12 @@ class HomeStateless extends StatefulWidget {
   State<StatefulWidget> createState() {
     return new HomeState();
   }
-
 }
 
 class HomeState extends State<HomeStateless>
     with SingleTickerProviderStateMixin {
-  Map decode;
-  List<Datas> articles = new List();
-  List<BannerData> bannerList = new List();
-  int pageIndex = 0;
-  int status = 0;
-  int total = 0;
+
   ScrollController _controller = new ScrollController();
-  List<Widget> items = new List();
   TabController tabController;
 
   @override
@@ -48,6 +50,10 @@ class HomeState extends State<HomeStateless>
         _getArticle(pageIndex);
       }
     });
+    if (articles.length == 0) {
+      pageIndex = 0;
+      _getArticle(pageIndex);
+    }
     return _buildHome();
   }
 
@@ -57,8 +63,6 @@ class HomeState extends State<HomeStateless>
     super.initState();
     tabController = new TabController(
         length: bannerList == null ? 0 : bannerList.length, vsync: this);
-    pageIndex = 0;
-    _getArticle(pageIndex);
   }
 
   @override
@@ -173,11 +177,15 @@ class HomeState extends State<HomeStateless>
                   ),
                   new Row(
                     children: <Widget>[
-                      buildButtonRow(Icons.person, articles[index].author, 10.0,false),
-                      buildButtonRow(Icons.select_all, articles[index].chapterName, 10.0,false),
-                      buildButtonRow(Icons.date_range, articles[index].niceDate, 10.0,true),
-                    ],
-                  ),
+                      buildButtonRow(
+                          Icons.person, articles[index].author, 10.0),
+                      buildButtonRow(
+                          Icons.select_all, articles[index].chapterName, 10.0),
+                       Expanded(
+                        child: buildButtonRow(
+                            Icons.date_range, articles[index].niceDate, 5.0),
+                         flex: 1,
+                      ),],),
                   new Divider()
                 ],
               ),
@@ -195,32 +203,19 @@ class HomeState extends State<HomeStateless>
   /**
    * 将文本和icon组合成为控件的方法
    */
-  Row buildButtonRow(IconData icon, String label, double margin,bool setWidth) {
+  Row buildButtonRow(IconData icon, String label, double margin) {
     Color color = Theme
         .of(context)
         .primaryColor;
     return new Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         new Container(
           child: new Icon(icon, color: color, size: 20.0,),
-          margin: EdgeInsets.only(left: margin,bottom: 10.0),
+          margin: EdgeInsets.only(left: margin, bottom: 10.0),
           alignment: Alignment.centerRight,
         ),
-
-        setWidth ? new Container(
-          alignment: Alignment.centerRight,
-          child: new Text(label,
-            softWrap: true,
-            style: new TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.w400,
-              color: Colors.grey[500],
-            ),
-          ),
-          margin: const EdgeInsets.only(left: 3.0,bottom: 10.0),
-        ) : new Container(
+        new Container(
           child: new Text(label,
             style: new TextStyle(
               fontSize: 13.0,
@@ -228,7 +223,7 @@ class HomeState extends State<HomeStateless>
               color: Colors.grey[500],
             ),
           ),
-          margin: const EdgeInsets.only(left: 3.0,bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0,right: 3.0),
         ),
       ],
     );
