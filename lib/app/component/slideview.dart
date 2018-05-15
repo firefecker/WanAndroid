@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/component/newsdetail.dart';
+import 'package:flutter_app/app/model/newsdetail.dart';
 import 'package:flutter_app/app/entity/banner.dart';
 
 class SlideView extends StatefulWidget {

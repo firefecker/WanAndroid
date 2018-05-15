@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/component/newsdetail.dart';
+import 'package:flutter_app/app/model/newsdetail.dart';
 import 'package:flutter_app/app/entity/hot_key.dart';
 import 'package:flutter_app/home.dart';
 
@@ -156,6 +156,8 @@ class DashBoardState extends State<HotkeyStateless> {
               if (isNet) {
                 Navigator.of(context).push(new MaterialPageRoute(
                     builder: (ctx) => new NewsDetail(id: hotEntities[i].link)));
+              } else {
+                
               }
             },
           )

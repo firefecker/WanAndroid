@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/component/newsdetail.dart';
 import 'package:flutter_app/app/entity/tree.dart';
+import 'package:flutter_app/app/model/dash_detail.dart';
 import 'package:flutter_app/home.dart';
 
 int status = 0;
@@ -119,7 +119,8 @@ class DashBoardState extends State<DashBoardStateless> {
                 onTap: () {
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (ctx) =>
-                      new NewsDetail(id: "http://www.baidu.com")
+                          new DashDetail(data: list[index],)
+//                      new NewsDetail(id: "http://www.baidu.com")
                   ));
                 },
               );

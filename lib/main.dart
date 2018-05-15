@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/model/home_detail.dart';
 import 'package:flutter_app/home.dart';
 
 
