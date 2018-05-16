@@ -71,4 +71,27 @@
           </tr>
     </table>
 
+
+#### 使用的第三方框架如下：
+
+```
+  cupertino_icons: ^0.1.0
+
+  english_words: ^3.1.0
+
+  font_awesome_flutter: ^6.0.0
+
+  flutter_webview_plugin: ^0.1.5
+
+  share: ^0.4.0
+
+  shared_preferences: ^0.4.1
+
+  fluttertoast: ^2.0.3
+
+  minibus: ^0.0.4
+
+  url_launcher: ^3.0.1
+```
+
 >[项目地址:https://github.com/firefecker/WanAndroid](https://github.com/firefecker/WanAndroid)
