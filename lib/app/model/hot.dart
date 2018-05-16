@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/app/model/dash_detail.dart';
 import 'package:flutter_app/app/model/newsdetail.dart';
 import 'package:flutter_app/app/entity/hot_key.dart';
+import 'package:flutter_app/app/model/search.dart';
 import 'package:flutter_app/home.dart';
 
 int status = 0;
@@ -156,7 +158,9 @@ class DashBoardState extends State<HotkeyStateless> {
                 Navigator.of(context).push(new MaterialPageRoute(
                     builder: (ctx) => new NewsDetail(id: hotEntities[i].link)));
               } else {
-                
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (ctx) =>
+                    new Search(hotEntities[i].name,)));
               }
             },
           )

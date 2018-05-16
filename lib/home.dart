@@ -32,13 +32,18 @@ class HomeState extends State<BossApp> {
 
   HomeState(this.children) {
     list.add([
-      new IconButton(
-          icon: new Icon(Icons.search, color: Colors.white),
-          tooltip: "Add Alarm",
-          onPressed: _pushSaved)
+//      new IconButton(
+//          icon: new Icon(Icons.brightness_2, color: Colors.white),
+//          tooltip: "Theme",
+//          onPressed: _pushSaved)
     ]);
     list.add(new List());
-    list.add(new List());
+    list.add([
+      new IconButton(
+          icon: new Icon(Icons.search, color: Colors.white),
+          tooltip: "Serach",
+          onPressed: _pushSaved)
+    ]);
     list.add(new List());
   }
 

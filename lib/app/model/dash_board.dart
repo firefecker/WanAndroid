@@ -119,8 +119,7 @@ class DashBoardState extends State<DashBoardStateless> {
                 onTap: () {
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (ctx) =>
-                          new DashDetail(data: list[index],)
-//                      new NewsDetail(id: "http://www.baidu.com")
+                      new DashDetail(data: list[index],)
                   ));
                 },
               );

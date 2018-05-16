@@ -218,7 +218,6 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
       );
       return;
     }
-
     _registerHttp();
   }
 
@@ -245,9 +244,9 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
             timeInSecForIos: 1);
         return;
       }
-      prefs.setString('userData', json);
-      eventbus.post(BaseURL);
       setState(() {
+        prefs.setString('userData', json);
+        eventbus.post(BaseURL);
         Navigator.of(context).pop("");
       });
     } else {
