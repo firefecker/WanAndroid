@@ -1,9 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/app/entity/user.dart';
+import 'package:flutter_app/app/model/mine.dart';
 import 'package:flutter_app/home.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginAndRegister extends StatefulWidget {
   bool status;
@@ -18,12 +22,15 @@ class LoginAndRegister extends StatefulWidget {
 class LoginAndRegisterState extends State<LoginAndRegister> {
   bool status;
   String title = "";
-  String userName = "";
-  String password = "";
-  String repeatPassword = "";
-  TextField TfUserName, TfPassword,TfRepeatPassword;
+  String userName = "",
+      password = "",
+      repeatPassword = "";
+  TextField TfUserName, TfPassword, TfRepeatPassword;
+  SharedPreferences prefs;
+  String userData = "";
 
   LoginAndRegisterState({Key key, this.status}) {
+    _incrementCounter();
     if (status) {
       title = "用户注册";
     } else {
@@ -32,6 +39,7 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
     TfUserName = new TextField(
       decoration: new InputDecoration(labelText: "用户名", hintText: "请输入用户名"),
       maxLines: 1,
+      autofocus: true,
       onChanged: (String value) {
         setState(() {
           userName = value;
@@ -47,6 +55,7 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
       decoration: new InputDecoration(labelText: "密码", hintText: "请输入密码"),
       maxLines: 1,
       obscureText: true,
+      autofocus: true,
       onChanged: (String value) {
         setState(() {
           password = value;
@@ -63,6 +72,7 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
       new InputDecoration(labelText: "确认密码", hintText: "请再次输入密码"),
       maxLines: 1,
       obscureText: true,
+      autofocus: true,
       onChanged: (String value) {
         setState(() {
           repeatPassword = value;
@@ -74,6 +84,11 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
         });
       },
     );
+  }
+
+  _incrementCounter() async {
+    prefs = await SharedPreferences.getInstance();
+    userData = prefs.getString('userData');
   }
 
   @override
@@ -112,7 +127,10 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
                   disabledElevation: 0.0,
                   padding: const EdgeInsets.all(7.0),
                   constraints: BoxConstraints(
-                      minWidth: MediaQuery.of(context).size.width,
+                      minWidth: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       minHeight: 40.0),
                   child: new Text(
                     "注 册",
@@ -142,7 +160,10 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
                   disabledElevation: 0.0,
                   padding: const EdgeInsets.all(7.0),
                   constraints: BoxConstraints(
-                      minWidth: MediaQuery.of(context).size.width,
+                      minWidth: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       minHeight: 40.0),
                   child: new Text(
                     "登 录",
@@ -201,16 +222,40 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
     _registerHttp();
   }
 
-  _registerHttp() async {
-    Map<String,String> map = new Map();
-    var httpClient = new HttpClient();
-    var uri = new Uri.http('www.wanandroid.com', '/user/register',);
-//    uri.queryParameters = map;
-//    {'username': userName, 'password': password, 'repassword': repeatPassword};
-    var request = await httpClient.postUrl(uri);
-    var response = await request.close();
-    var json = await response.transform(UTF8.decoder).join();
-    print(json);
+  _registerHttp(){
+    Map<String, String> params = new Map();
+    params['username'] = userName;
+    params['password'] = password;
+    params['repassword'] = repeatPassword;
+    var request = new MultipartRequest(
+        'POST', Uri.parse(BaseURL + "/user/register"));
+    request.fields.addAll(params);
+    _controlData(request);
+  }
+
+  _controlData(MultipartRequest request) async {
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      var json = await response.stream.transform(UTF8.decoder).join();
+      UserEntity userEntity = UserEntity.fromJson(json);
+      if (userEntity.data == null) {
+        Fluttertoast.showToast(msg: userEntity.errorMsg,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1);
+        return;
+      }
+      prefs.setString('userData', json);
+      eventbus.post(BaseURL);
+      setState(() {
+        Navigator.of(context).pop("");
+      });
+    } else {
+      Fluttertoast.showToast(msg: "请求失败",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIos: 1);
+    }
   }
 
   void _login() {
@@ -233,17 +278,15 @@ class LoginAndRegisterState extends State<LoginAndRegister> {
       return;
     }
     _loginHttp();
-
   }
 
   _loginHttp() async {
-
-    var httpClient = new HttpClient();
-//    var uri = new Uri.http('www.wanandroid.com', '/user/login', {'username': userName, 'password': password});
-    var uri = new Uri(scheme: 'http',host: 'www.wanandroid.com',path: '/user/login',queryParameters: {'username': userName, 'password': password});
-    var request = await httpClient.postUrl(uri);
-    var response = await request.close();
-    var json = await response.transform(UTF8.decoder).join();
-    print(uri.toString());
+    Map<String, String> params = new Map();
+    params['username'] = userName;
+    params['password'] = password;
+    var request = new MultipartRequest(
+        'POST', Uri.parse(BaseURL + "/user/login"));
+    request.fields.addAll(params);
+    _controlData(request);
   }
 }

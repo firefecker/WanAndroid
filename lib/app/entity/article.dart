@@ -57,12 +57,10 @@ class ArticleEntity extends BaseEntity {
 class Data extends BaseData{
 
   List<Datas> datas;
-
   @override
   String toString() {
     return 'Data{datas: $datas}';
   }
-
 
 }
 

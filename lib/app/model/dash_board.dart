@@ -127,8 +127,7 @@ class DashBoardState extends State<DashBoardStateless> {
             }),
         onRefresh: () {
           list.clear();
-          setState(() {});
-          _getDashBoard();
+          setState(() {  _getDashBoard();});
         });
   }
 

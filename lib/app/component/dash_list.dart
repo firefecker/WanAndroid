@@ -151,8 +151,7 @@ class DashListState extends State<DashList> {
       onRefresh: () {
         articles.clear();
         pageIndex = 0;
-        setState(() {});
-        _getArticle(pageIndex);
+        setState(() { _getArticle(pageIndex);});
       },
     );
   }

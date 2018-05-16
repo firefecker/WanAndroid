@@ -52,15 +52,14 @@ class SplashState extends State<SplashPage> {
       color: Colors.blue,
       child: new Padding(
         padding: const EdgeInsets.only(
-          top: 150.0,
+          bottom: 150.0,
         ),
-        child: new Column(
-          children: <Widget>[
-            new Text("启动页",
-              style: new TextStyle(color: Colors.white,
-                  fontSize: 50.0,
-                  fontWeight: FontWeight.bold),),
-          ],
+        child: new Center(
+          child:
+          new Text("WanAndroid",
+            style: new TextStyle(color: Colors.white,
+                fontSize: 50.0,
+                fontWeight: FontWeight.bold),),
         ),
       ),
     );

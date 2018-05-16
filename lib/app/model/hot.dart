@@ -135,8 +135,7 @@ class DashBoardState extends State<HotkeyStateless> {
       onRefresh: () {
         hotEntities.clear();
         friendEntities.clear();
-        setState(() {});
-        _getHotkey();
+        setState(() { _getHotkey();});
       },
     );
   }

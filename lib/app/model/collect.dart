@@ -2,43 +2,30 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/app/entity/collect.dart';
+import 'package:flutter_app/app/entity/user.dart';
 import 'package:flutter_app/app/model/newsdetail.dart';
-import 'package:flutter_app/app/component/slideview.dart';
-import 'package:flutter_app/app/entity/article.dart';
-import 'package:flutter_app/app/entity/banner.dart';
 import 'package:flutter_app/home.dart';
-
+UserEntity userEntity;
 List<Datas> articles = new List();
-int status = 0;
-List<BannerData> bannerList = new List();
-int pageIndex = 0;
-int total = 0;
 
-class Home extends StatelessWidget {
-  Widget widget;
+class Collection extends StatefulWidget {
 
-  Home() {
-    widget = new HomeStateless();
+  Collection(entity) {
+    userEntity = entity;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget;
-  }
+  State<StatefulWidget> createState() =>
+      new CollectionState();
 }
 
-class HomeStateless extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new HomeState();
-  }
-}
+class CollectionState extends State<Collection> {
 
-class HomeState extends State<HomeStateless>
-    with SingleTickerProviderStateMixin {
-
+  int pageIndex = 0;
+  int total = 0;
+  int status = 0;
   ScrollController _controller = new ScrollController();
-  TabController tabController;
 
   @override
   Widget build(BuildContext context) {
@@ -47,72 +34,41 @@ class HomeState extends State<HomeStateless>
       var pixels = (_controller.position).pixels;
       if (maxScroll == pixels && articles.length < total) {
         pageIndex++;
-        _getArticle(pageIndex);
+        _getCollection(pageIndex);
       }
     });
     if (articles.length == 0) {
       pageIndex = 0;
-      _getArticle(pageIndex);
+      _getCollection(pageIndex);
     }
-    return _buildHome();
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("我的收藏"),
+        centerTitle: false,
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back, color: Colors.white),
+            tooltip: "backPressed",
+            onPressed: _popSaved),
+      ),
+      body: _buildHome(),
+    );
   }
 
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = new TabController(
-        length: bannerList == null ? 0 : bannerList.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
-  }
-
-  _getBanner(HttpClient httpClient) async {
-    bannerList.clear();
-    var uri1 = Uri.parse(
-        BaseURL + "/banner/json");
-    var request1 = await httpClient.getUrl(uri1);
-    var response1 = await request1.close();
-    if (response1.statusCode == HttpStatus.OK) {
-      var json = await response1.transform(UTF8.decoder).join();
-      BannerEntity entity = BannerEntity
-          .fromJson(json);
-      bannerList.addAll(entity.data);
-    }
-  }
-
-  _getArticle(int i) async {
-    try {
-      var httpClient = new HttpClient();
-      var uri = Uri.parse(
-          BaseURL + "/article/list/$i/json");
-      if (i == 0) {
-        _getBanner(httpClient);
+  List<Datas> flateData(List<Datas> datas) {
+    List<Datas> list = [];
+    for (var i = 0; i < datas.length; i ++) {
+      bool notContain = true;
+      for (var j = 0; j < articles.length; j ++) {
+        if (articles[j].id == datas[i].id) {
+          notContain = false;
+        }
       }
-      var request = await httpClient.getUrl(uri);
-      var response = await request.close();
-      if (response.statusCode == HttpStatus.OK) {
-        status = 0;
-        var json = await response.transform(UTF8.decoder).join();
-        var fromJson = ArticleEntity
-            .fromJson(json)
-            .data;
-        total = fromJson.total;
-        articles.addAll(fromJson.datas);
-      } else {
-        status = -1;
+      if (notContain) {
+        list.add(datas[i]);
       }
-    } catch (exception) {
-      print(exception.toString());
-      status = -1;
     }
-    setState(() {});
+    return list;
   }
-
 
   Widget _buildHome() {
     return getCurrentStateWidget();
@@ -132,33 +88,14 @@ class HomeState extends State<HomeStateless>
     return currentStateWidget;
   }
 
-  Widget _getErrorState() {
-    return new Center(
-      child: new Row(),
-    );
-  }
-
-  Widget _getLoadingStateWidget() {
-    return new Center(
-      child: new CircularProgressIndicator(),
-    );
-  }
-
   Widget _getSuccessStateWidget() {
     return new RefreshIndicator(
       child: new ListView.builder(
-          itemCount: articles.length + 1,
+          itemCount: articles.length ,
           physics: new AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
           controller: _controller,
           itemBuilder: (context, index) {
-            if (index == 0) {
-              return new Container(
-                height: 210.0,
-                child: new SlideView(bannerList),
-              );
-            }
-            index = index - 1;
             return new InkWell(
               onTap: () {
                 // 点击跳转到详情
@@ -181,10 +118,10 @@ class HomeState extends State<HomeStateless>
                           Icons.person, articles[index].author, 10.0),
                       buildButtonRow(
                           Icons.select_all, articles[index].chapterName, 10.0),
-                       Expanded(
+                      Expanded(
                         child: buildButtonRow(
                             Icons.date_range, articles[index].niceDate, 5.0),
-                         flex: 1,
+                        flex: 1,
                       ),],),
                   new Divider()
                 ],
@@ -195,8 +132,16 @@ class HomeState extends State<HomeStateless>
       onRefresh: () {
         articles.clear();
         pageIndex = 0;
-        setState(() {  _getArticle(pageIndex);});
+        setState(() {
+          _getCollection(pageIndex);
+        });
       },);
+  }
+
+  Widget _getErrorState() {
+    return new Center(
+      child: new Row(),
+    );
   }
 
   /**
@@ -226,5 +171,44 @@ class HomeState extends State<HomeStateless>
         ),
       ],
     );
+  }
+
+  Widget _getLoadingStateWidget() {
+    return new Center(
+      child: new Text("暂无数据"),
+    );
+  }
+
+  void _popSaved() {
+    Navigator.of(context).pop("");
+  }
+
+  void _getCollection(int index) async {
+    try {
+      var httpClient = new HttpClient();
+      var uri = Uri.parse(BaseURL + "/lg/collect/list/$index/json");
+      var request = await httpClient.getUrl(uri).then((request){
+        request.cookies.add(new Cookie("loginUserName",userEntity.data.username));
+        request.cookies.add(new Cookie("loginUserPassword",userEntity.data.password));
+        return request;
+      });
+      var response = await request.close();
+      if (response.statusCode == HttpStatus.OK) {
+        status = 0;
+        var json = await response.transform(UTF8.decoder).join();
+        var fromJson = Collect
+            .fromJson(json)
+            .data;
+        total = fromJson.total;
+        articles.addAll(flateData(fromJson.datas));
+      } else {
+        status = -1;
+      }
+    } catch (exception) {
+      print(exception.toString());
+      status = -1;
+    } finally {
+      setState(() {});
+    }
   }
 }
